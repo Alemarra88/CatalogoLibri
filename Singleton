@@ -1,0 +1,109 @@
+package it.mad.catalogolibrimad;
+
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import it.mad.catalogolibrimad.models.Libro;
+import it.mad.catalogolibrimad.models.Utente;
+
+public class DataAccessSingleton {
+    private ArrayList<Libro> libri;
+    private ArrayList<Utente> utenti;
+
+    private static DataAccessSingleton instance;
+
+    private DataAccessSingleton(){
+    }
+
+    public static DataAccessSingleton getInstance(){
+        if (instance == null){
+            instance = new DataAccessSingleton();
+        }
+        return instance;
+    }
+
+    public void init(){
+        libri = new ArrayList<>();
+        utenti = new ArrayList<>();
+        // adding starting libri
+        Libro l1 = new Libro("Il signore degli anelli", "J. R. Tolkien", 1, "123456789", "casa editrice uno");
+        Libro l2 = new Libro("I promessi spsosi", "A. Manzoni", 1, "123456789", "casa editrice due");
+        Libro l3 = new Libro("Corso completo di russo", "V. K.", 1, "123456789", "casa editrice tre");
+        Libro l4 = new Libro("Design Patterns", "K. K.", 2, "123456789", "casa editrice uno");
+        Libro l5 = new Libro("Neuromante", "W. Gibson", 2, "123456789", "casa editrice due");
+        Libro l6 = new Libro("Ubik", "P. K. Dick", 2, "123456789", "casa editrice tre");
+        libri.add(l1);
+        libri.add(l2);
+        libri.add(l3);
+        libri.add(l4);
+        libri.add(l5);
+        libri.add(l6);
+
+        // adding starting utente
+        Utente u1 = new Utente(1, "m.r@gmail.com", "123", "Mario", "Rossi");
+        Utente u2 = new Utente(2, "m.b@gmail.com", "123", "Marco", "Bianchi");
+        utenti.add(u1);
+        utenti.add(u2);
+
+    }
+
+    public int newId(){
+        int maxID = 0;
+        int currentID = 0;
+        for (Utente u : utenti){
+            currentID = u.getId();
+            if (currentID >= maxID){
+                maxID = currentID;
+            }
+        }
+        maxID = currentID + 1;
+        return maxID;
+    }
+
+    public void addUtente(Utente utente){
+        utenti.add(utente);
+    }
+
+    public String getUserName(){
+        String nomi = null;
+        for (Utente u : utenti){
+            nomi += u.getNome();
+        }
+        return nomi;
+    }
+
+    public int getID(String mail) {
+        for (Utente u : utenti){
+            if (u.getEmail().toLowerCase().equals(mail)){
+                return u.getId();
+            }
+        }
+        return 0;
+    }
+
+    public void setReadCheck(int id, boolean isChecked){
+        for (Libro l : libri){
+            if (l.getId() == id){
+                l.setRead(isChecked);
+            }
+        }
+    }
+
+    public boolean checkExistingUser(String mail){
+        for(Utente u : utenti){
+            if (u.getEmail().equals(mail)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Libro> getLibri() {
+        return libri;
+    }
+
+    public ArrayList<Utente> getUtenti() {
+        return utenti;
+    }
+}
